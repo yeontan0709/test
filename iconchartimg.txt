@@ -1,0 +1,104 @@
+//add this to pubsec.yaml:
+//dependencies:
+//flutter:
+//sdk: flutter
+//fl_chart: ^0.63.0
+//]
+
+//run flutter pub get
+
+//add local img in assets folder
+//and then follwoing in pubsec.yaml
+
+//flutter:
+//assets:
+//- assets/chart_banner.png
+
+import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Chart + Icon + Image Demo',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: DemoScreen(),
+    );
+  }
+}
+
+class DemoScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Chart + Icon + Image')),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Icon(Icons.star, size: 60, color: Colors.orange), // Icon
+
+            SizedBox(height: 20),
+
+            Image.asset(
+              // Local Image from assets
+              'assets/images/image1.jpeg',
+              height: 100,
+            ),
+
+            SizedBox(height: 20),
+
+            Text(
+              "Line Chart",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+
+            SizedBox(height: 10),
+
+            InteractiveViewer(
+              // Chart with zoom & pan
+              boundaryMargin: EdgeInsets.all(20),
+              minScale: 0.5,
+              maxScale: 5,
+              child: Container(
+                width: 600,
+                height: 300,
+                child: LineChart(
+                  LineChartData(
+                    minX: 0,
+                    maxX: 12,
+                    minY: 0,
+                    maxY: 6,
+                    lineBarsData: [
+                      LineChartBarData(
+                        isCurved: true,
+                        color: Colors.blue,
+                        barWidth: 3,
+                        dotData: FlDotData(show: true),
+                        belowBarData: BarAreaData(show: false),
+                        spots: [
+                          FlSpot(0, 3),
+                          FlSpot(2.6, 2),
+                          FlSpot(4.9, 5),
+                          FlSpot(6.8, 3.1),
+                          FlSpot(8, 4),
+                          FlSpot(9.5, 3),
+                          FlSpot(11, 4),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

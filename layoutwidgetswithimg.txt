@@ -1,0 +1,122 @@
+import 'package:flutter/material.dart';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Local Image Layout',
+      home: Scaffold(
+        appBar: AppBar(title: Text('Image with Descriptions')),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(height: 20),
+              ItemWidget(
+                imagePath: 'assets/images/image1.jpeg',
+                descriptions: ['cute', 'cat', 'lol'],
+              ),
+              SizedBox(height: 50),
+              ItemWidget(
+                imagePath: 'assets/images/image2.jpeg',
+                descriptions: ["cute", 'dog', 'bro'],
+              ),
+              SizedBox(height: 50),
+              ItemWidget(
+                imagePath: 'assets/images/image3.jpeg',
+                descriptions: ['andha ', 'hai kya', 'bee'],
+              ),
+              SizedBox(height: 50),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ItemWidget extends StatelessWidget {
+  final String imagePath;
+  final List<String> descriptions;
+
+  const ItemWidget({
+    required this.imagePath,
+    required this.descriptions,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.25),
+            spreadRadius: 1,
+            blurRadius: 6,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          // Image Container
+          Expanded(
+            flex: 2,
+            child: Container(
+              height: 250,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                image: DecorationImage(
+                  image: AssetImage(imagePath),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: 16),
+          // Description Boxes
+          Expanded(
+            flex: 3,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children:
+                  descriptions
+                      .map(
+                        (desc) => Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: DescriptionBox(text: desc),
+                        ),
+                      )
+                      .toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class DescriptionBox extends StatelessWidget {
+  final String text;
+
+  const DescriptionBox({required this.text, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: Colors.grey[400]!),
+      ),
+      child: Text(text, style: TextStyle(fontSize: 14)),
+    );
+  }
+}

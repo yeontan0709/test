@@ -1,0 +1,123 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Simple Form',
+      debugShowCheckedModeBanner: false,
+      home: SimpleFormPage(),
+    );
+  }
+}
+
+class SimpleFormPage extends StatefulWidget {
+  @override
+  _SimpleFormPageState createState() => _SimpleFormPageState();
+}
+
+class _SimpleFormPageState extends State<SimpleFormPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _dobController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Simple Form')),
+      body: Padding(
+        padding: EdgeInsets.all(16),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+              // Name
+              TextFormField(
+                controller: _nameController,
+                decoration: InputDecoration(labelText: 'Name'),
+                validator:
+                    (value) =>
+                        value == null || value.isEmpty
+                            ? 'Enter your name'
+                            : null,
+              ),
+              SizedBox(height: 16),
+
+              // Phone Number
+              TextFormField(
+                controller: _phoneController,
+                decoration: InputDecoration(labelText: 'Phone Number'),
+                keyboardType: TextInputType.phone,
+                validator: (value) {
+                  if (value == null || value.isEmpty)
+                    return 'Enter phone number';
+                  if (value.length != 10 ||
+                      !RegExp(r'^[0-9]+$').hasMatch(value)) {
+                    return 'Phone number must be exactly 10 digits';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 16),
+
+              // Email
+              TextFormField(
+                controller: _emailController,
+                decoration: InputDecoration(labelText: 'Email'),
+                keyboardType: TextInputType.emailAddress,
+                validator: (value) {
+                  if (value == null || value.isEmpty) return 'Enter your email';
+                  if (!value.contains('@')) return 'Email must contain @';
+                  return null;
+                },
+              ),
+              SizedBox(height: 16),
+
+              // Date of Birth (simple date picker)
+              TextFormField(
+                controller: _dobController,
+                decoration: InputDecoration(labelText: 'Date of Birth'),
+                readOnly: true,
+                onTap: () async {
+                  DateTime? picked = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime(2000),
+                    firstDate: DateTime(1900),
+                    lastDate: DateTime.now(),
+                  );
+                  if (picked != null) {
+                    _dobController.text = "${picked.toLocal()}".split(' ')[0];
+                  }
+                },
+                validator:
+                    (value) =>
+                        value == null || value.isEmpty
+                            ? 'Select your DOB'
+                            : null,
+              ),
+              SizedBox(height: 24),
+
+              // Submit Button
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text('Form Submitted')));
+                  }
+                },
+                child: Text('Submit'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
